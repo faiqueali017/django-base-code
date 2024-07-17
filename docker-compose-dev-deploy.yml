@@ -2,25 +2,16 @@ services:
   app:
     build:
       context: .
-      args:
-        - DEV=true
-    image: custom_app_image_name
-    ports:
-      - "8000:8000"
+    restart: always
     volumes:
-      - ./app:/app
-      - dev-static-data:/vol/web
-    command: >
-      sh -c "python manage.py wait_for_db &&
-             python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+      - static-data:/vol/web
     environment:
-      - DEBUG=1
+      - DEBUG=0
       - DB_HOST=db
-      - DB_NAME=devdb
-      - DB_USER=devuser
-      - DB_PASS=changeme
-      - SECRET_KEY=changethesecretkey
+      - DB_NAME=postgresdevdb
+      - DB_USER=devdbuser
+      - DB_PASS=devdbpassword
+      - SECRET_KEY=changeDevSecretKey
       - ALLOWED_HOSTS=localhost,0.0.0.0
       - CSRF_TRUSTED_ORIGINS=https://dev-be.domain.com
       - OPENAI_ORG_KEY=org-uniqueorgid
@@ -40,12 +31,23 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - dev-db-data:/var/lib/postgres/data
+      - postgres-dev-data:/var/lib/postgres/data
     environment:
-      - POSTGRES_DB=devdb
-      - POSTGRES_USER=devuser
-      - POSTGRES_PASSWORD=changeme
+      - POSTGRES_DB=postgresdevdb
+      - POSTGRES_USER=devdbuser
+      - POSTGRES_PASSWORD=devdbpassword
+
+  proxy:
+    build:
+      context: ./proxy
+    restart: always
+    depends_on:
+      - app
+    ports:
+      - 8000:8000
+    volumes:
+      - static-data:/vol/static
 
 volumes:
-  dev-db-data:
-  dev-static-data:
+  postgres-dev-data:
+  static-data:

@@ -1,6 +1,7 @@
 """
 Django admin customization.
 """
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
@@ -8,45 +9,75 @@ from django.utils.translation import gettext_lazy as _
 from core import models
 
 
+@admin.register(models.User)
 class UserAdmin(BaseUserAdmin):
-    """Define the admin pages for users."""
-    ordering = ['id']
-    list_display = ['email', 'name']
+    ordering = ["user_id"]
+    list_display = [
+        "email",
+        "first_name",
+        "last_name",
+        "user_type",
+        "is_staff",
+        "is_active",
+    ]
+    list_filter = ["is_staff", "is_active", "user_type"]
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {"fields": ("email", "password")}),
         (
-            _('Permissions'),
+            _("Personal Info"),
             {
-                'fields': (
-                    'is_active',
-                    'is_staff',
-                    'is_superuser'
-                )
-            }
+                "fields": ("first_name", "last_name", "image_id"),
+            },
         ),
-        (_('Important dates'), {'fields': ('last_login',)}),
+        (
+            _("Permissions"),
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "user_type",
+                ),
+            },
+        ),
+        (_("Important dates"), {"fields": ("last_login", "deleted_at")}),
     )
-    readonly_fields = ['last_login']
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': (
-                'email',
-                'password',
-                'password1',
-                'password2',
-                'name',
-                'is_active',
-                'is_staff',
-                'is_superuser'
-            )
-        }),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "email",
+                    "password1",
+                    "password2",
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "user_type",
+                ),
+            },
+        ),
     )
+    search_fields = ["email", "first_name", "last_name"]
+    filter_horizontal = ()
 
 
-# Register those models here that are manageable via Django Admin
-# Set custom class i.e. 'UserAdmin'
-admin.site.register(models.User, UserAdmin)
-admin.site.register(models.Recipe)
-admin.site.register(models.Tag)
-admin.site.register(models.Ingredient)
+@admin.register(models.OTP)
+class OTPAdmin(admin.ModelAdmin):
+    ordering = ["otp_id"]
+    list_display = [
+        "otp_id",
+        "code",
+        "user",
+        "created_at",
+        "used_at",
+        "expires_at",
+    ]
+
+
+@admin.register(models.File)
+class FileAdmin(admin.ModelAdmin):
+    ordering = ["file_id"]
+    list_display = ["file_id", "source_url", "file_type", "created_at"]
+    list_filter = ["file_type"]

@@ -1,8 +1,6 @@
+# Elevate-BE
 
-# Django-base-code
-
-This repo contains ready-to use base code for django applications.
-
+This repo contains code base code for django.
 
 ## Features
 
@@ -11,19 +9,14 @@ This repo contains ready-to use base code for django applications.
 - PostgreSQL
 - Docker
 - Ready to deploy configs
-- Github Actions
-- Swagger (API Docs)
-- Ready to use as a base code
-- Usage Examples
-    - Example:01 - Recipe, Ingredients, Recipe-Tags APIs
-    - Example:02 - *[Work in Process]* E-commerce APIs
-
+- Bitbucket pipelines
 
 ## Prerequisites
 
-- Python 3.9
+- Python 3.10
 - Docker
 - VScode
+
 ## How to use?
 
 **To build docker image**
@@ -44,15 +37,42 @@ This repo contains ready-to use base code for django applications.
   docker-compose down
 ```
 
+**To create new app**
+
+```bash
+  docker-compose run --rm app sh -c "python manage.py startapp <app-name>"
+```
+
+**To migrate database schema**
+
+```bash
+  docker-compose run --rm app sh -c "python manage.py makemigrations"
+  docker-compose run --rm app sh -c "python manage.py migrate"
+```
+
+**To create superuser**
+
+```bash
+  docker-compose run --rm app sh -c "python manage.py createsuperuser"
+```
+
 **To execute tests**
 
 ```bash
   docker-compose run --rm app sh -c "python manage.py test"
 ```
-## Authors
 
-- [Faique Ali](https://www.github.com/faiqueali017)
+**To check linting**
 
+```bash
+  docker-compose run --rm app sh -c "flake8"
+```
+
+**To format code**
+
+```bash
+  docker-compose run --rm app sh -c "black ."
+```
 
 ## Contributing
 
@@ -64,7 +84,3 @@ Contributions are always welcome!
 - Open a Pull Request
 
 Please adhere to this project's `code of conduct`.
-## 🔗 Connect Me
-[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:faiqueali017@gmail.com)
-
-[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/faique-ali/)

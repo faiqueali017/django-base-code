@@ -1,0 +1,29 @@
+image: atlassian/default-image:4
+
+options:
+  docker: true
+
+pipelines:
+  branches:
+    dev-deployment:
+      - step:
+          name: Deployment to Dev Server
+          script:
+            - apt-get update 
+            - apt-get install -y rsync
+            - export DOCKER_BUILDKIT=0
+            # - ssh ubuntu@44.221.91.5 "mkdir -p ~/elevate-api"
+            # - rsync -av ./Dockerfile ./requirements.txt ./requirements.dev.txt ./app ./proxy ./scripts ./docker-compose-dev-deploy.yml -e ssh ubuntu@44.221.91.5:~/elevate-api
+            # - ssh ubuntu@44.221.91.5 "cd ~/elevate-api && sudo docker-compose -f docker-compose-dev-deploy.yml up -d"
+    
+    master:
+      - step:
+          name: Deployment to Production Server
+          script:
+            - apt-get update 
+            - apt-get install -y rsync
+            - export DOCKER_BUILDKIT=0
+            # - ssh ubuntu@3.92.248.82 "mkdir -p ~/elevate-api"
+            # - rsync -av ./Dockerfile ./requirements.txt ./requirements.dev.txt ./app ./proxy ./scripts ./docker-compose-prod-deploy.yml -e ssh ubuntu@3.92.248.82:~/elevate-api
+            # - ssh ubuntu@3.92.248.82 "cd ~/elevate-api && sudo docker-compose -f docker-compose-prod-deploy.yml up -d"
+      
